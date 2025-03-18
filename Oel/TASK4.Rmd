@@ -1,0 +1,68 @@
+---
+title: "Diabetes Prediction using Logistic Regression"
+author: "Khurram, F23607049"
+date: "2025-03-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Required Libraries
+
+```{r load_libraries}
+library(ggplot2)  # Visualization
+library(dplyr)    # Data manipulation
+library(caret)    # Machine learning utilities
+library(caTools)  # Splitting data
+```
+
+## Load the Dataset
+
+```{r load_data}
+# Define file path
+data_path <- "C:/Users/hp/Downloads/diabetes.csv"
+
+# Load dataset
+diabetes_data <- read.csv(data_path, stringsAsFactors = TRUE)
+
+# View first few rows
+head(diabetes_data)
+```
+
+## Data Preprocessing
+
+```{r data_preprocessing}
+# Convert Outcome to a factor variable
+diabetes_data$Outcome <- as.factor(diabetes_data$Outcome)
+```
+
+## Split Data into Training and Testing Sets
+
+```{r split_data}
+set.seed(123)  # Set seed for reproducibility
+split <- sample.split(diabetes_data$Outcome, SplitRatio = 0.8)
+train_data <- subset(diabetes_data, split == TRUE)
+test_data <- subset(diabetes_data, split == FALSE)
+```
+
+## Train Logistic Regression Model
+
+```{r train_model}
+logistic_model <- glm(Outcome ~ ., data = train_data, family = binomial)
+summary(logistic_model)
+```
+
+## Make Predictions and Evaluate Model
+
+```{r evaluate_model}
+# Predict on test data
+predictions <- predict(logistic_model, newdata = test_data, type = "response")
+
+# Convert probabilities to binary outcome
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+# Compute accuracy
+accuracy <- mean(predicted_classes == test_data$Outcome)
+cat("Accuracy:", accuracy * 100, "%\n")

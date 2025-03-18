@@ -1,0 +1,64 @@
+---
+title: "Climate Change: Earth Surface Temperature Data Visualization"
+author: "Khurram, F23607049"
+output: html_document
+
+date: "2025-03-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Dataset and Packages
+
+```{r load_data}
+library(ggplot2)  # Load ggplot2 for visualization
+library(dplyr)   # Load dplyr for data manipulation
+library(lubridate) # Load lubridate for date handling
+
+# Define file path
+data_path <- "C:/Users/hp/Downloads/archive (1)/GlobalTemperatures.csv"
+data_path <- "C:/Users/hp/Downloads/archive (1)/GlobalTemperatures.csv"
+
+# Load the dataset
+data <- read.csv(data_path, stringsAsFactors = FALSE)
+
+# Convert dt column to Date format
+data$dt <- as.Date(data$dt)
+
+# Select relevant columns
+data <- data %>% select(dt, LandAverageTemperature, LandAverageTemperatureUncertainty)
+
+# Display first 5 rows
+head(data, 5)
+```
+
+## Line Chart: Global Temperature Change Over Time
+
+```{r line_chart, echo=FALSE}
+ggplot(data, aes(x = dt, y = LandAverageTemperature)) + 
+  geom_line(color = "blue") + 
+  geom_ribbon(aes(ymin = LandAverageTemperature - LandAverageTemperatureUncertainty, 
+                  ymax = LandAverageTemperature + LandAverageTemperatureUncertainty), 
+              fill = "lightblue", alpha = 0.4) +
+  labs(title = "Global Temperature Change Over Time", 
+       x = "Year", 
+       y = "Average Temperature (Degrees Celsius)") + 
+  theme_minimal()
+
+ggsave("temperature_trend.png", width = 8, height = 5, dpi = 300)
+```
+
+## Scatter Plot: Temperature vs Uncertainty
+
+```{r scatter_plot, echo=FALSE}
+ggplot(data, aes(x = LandAverageTemperature, y = LandAverageTemperatureUncertainty)) + 
+  geom_point(color = "red", alpha = 0.5) + 
+  labs(title = "Temperature vs Uncertainty", 
+       x = "Land Average Temperature (Degrees Celsius)", 
+       y = "Temperature Uncertainty (Degrees Celsius)") + 
+  theme_minimal()
+
+ggsave("temperature_scatter.png", width = 8, height = 5, dpi = 300)
+```

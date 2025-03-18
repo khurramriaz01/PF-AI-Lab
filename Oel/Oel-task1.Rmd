@@ -1,0 +1,44 @@
+---
+title: "World Happiness Report 2024 Analysis"
+author: "Khurram, F23607049"
+output: html_document
+date: "2025-03-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Dataset
+
+```{r load_data}
+library(dplyr)  # Load dplyr for data manipulation
+
+# Define file path
+data_path <- "C:/Users/hp/Downloads/archive/WHR2024.csv"
+
+# Load the dataset
+data <- read.csv(data_path, stringsAsFactors = FALSE)
+
+# Display first 5 rows
+head(data, 5)
+```
+
+## Summary Statistics
+
+```{r summary_stats}
+summary(data)
+```
+
+## Identify Missing Values
+
+```{r missing_values}
+colSums(is.na(data))
+```
+
+## Save Cleaned Dataset
+
+```{r save_cleaned_data}
+# Save the cleaned dataset as cleaned_happiness.csv
+write.csv(data, "cleaned_happiness.csv", row.names = FALSE)
+```
